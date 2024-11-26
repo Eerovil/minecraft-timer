@@ -13,9 +13,24 @@
     <link rel="stylesheet" href="main.css">
   </head>
   <body>
+    <div id="time-left"></div>
     <div id="input">
-        <input type="number" id="time" placeholder="Enter time in minutes" onkeydown="if(event.keyCode == 13) start()">
-        <button id="start" onclick="start()">Start</button>
+        <div>
+            <input type="number" id="time" placeholder="Enter time in minutes" onkeydown="if(event.keyCode == 13) start()">
+            <button id="start" onclick="start()">Start</button>
+        </div>
+        <div class="quick-buttons">
+            <button onclick="start(1)">1</button>
+            <button onclick="start(2)">2</button>
+            <button onclick="start(5)">5</button>
+            <button onclick="start(10)">10</button>
+            <button onclick="start(15)">15</button>
+            <button onclick="start(20)">20</button>
+            <button onclick="start(25)">25</button>
+            <button onclick="start(30)">30</button>
+            <button onclick="start(45)">45</button>
+            <button onclick="start(60)">60</button>
+        </div>
     </div>
     <script src="main.js"></script>
   </body>

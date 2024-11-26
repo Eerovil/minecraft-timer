@@ -1,9 +1,9 @@
 console.log("Hello world")
 
-const start = () => {
-    let time = 0;
+const start = (time) => {
+    time = time;
     try {
-        time = parseInt(document.getElementById("time").value)
+        time = time || parseInt(document.getElementById("time").value)
     } catch (error) {
         alert("Please enter a valid number")
         return
@@ -51,6 +51,11 @@ const createItems = (count) => {
 
 const updateTimer = () => {
     window.timeLeft--;
+    const timeLeftEl = document.getElementById("time-left");
+    // Update time left as mm:ss
+    const minutes = Math.floor((window.timeLeft % 3600) / 60);
+    const seconds = window.timeLeft % 60;
+    timeLeftEl.innerText = `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
     if (window.timeLeft <= 0) {
         clearInterval(window.timer);
         alert("Time is up!");

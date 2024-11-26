@@ -4,7 +4,7 @@ window.noSleep = new NoSleep();
 const start = (time) => {
     time = time;
     try {
-        time = time || parseInt(document.getElementById("time").value)
+        time = time || parseFloat(document.getElementById("time").value)
     } catch (error) {
         alert("Please enter a valid number")
         return
@@ -28,7 +28,26 @@ const start = (time) => {
     showInput(false);
     createItems(time * 6);
     startTimer(time);
+    window.originalTime = time * 60;
     noSleep.enable();
+    window.alarm = loadSound('alarm.mp3')
+}
+
+const speak = (text, force = true) => {
+    console.log("SPEAKING:", text);
+    const utter = new SpeechSynthesisUtterance();
+    utter.lang = 'fi-FI';
+    utter.text = text;
+    utter.rate = 1;
+    utter.pitch = 0.8;
+    if (force) {
+        speechSynthesis.cancel();
+    } else {
+        if (speechSynthesis.speaking) {
+            return;
+        }
+    } 
+    speechSynthesis.speak(utter);
 }
 
 const setScale = (scale) => {
@@ -39,6 +58,7 @@ const setScale = (scale) => {
 }
 
 const stop = () => {
+    window.alarm.play();
     clearInterval(window.timer);
     showInput(true);
     noSleep.disable();
@@ -83,6 +103,19 @@ const createItems = (count) => {
 
 const updateTimer = () => {
     window.timeLeft--;
+    if (window.timeLeft && window.timeLeft <= 10) {
+        speak(window.timeLeft, true);
+    } else if (window.timeLeft && window.timeLeft == 30) {
+        speak("30 sekuntia jäljellä", true);
+    } else if (window.timeLeft && window.timeLeft == 60) {
+        speak("Yksi minuutti jäljellä", true);
+    } else if (window.timeLeft && window.timeLeft == 5 * 60) {
+        speak("Viisi minuuttia jäljellä", true);
+    } else if (window.timeLeft && window.timeLeft == 10 * 60) {
+        speak("Kymmenen minuuttia jäljellä", true);
+    } else if (window.originalTime && window.timeLeft == window.originalTime / 2) {
+        speak("Puolet ajasta kulunut", true);
+    }
     const timeLeftEl = document.getElementById("time-left");
     // Update time left as mm:ss
     const minutes = Math.floor((window.timeLeft % 3600) / 60);
@@ -123,3 +156,21 @@ const startTimer = (time) => {
     updateTimer();
     window.timer = setInterval(updateTimer, 1000);
 }
+
+function loadSound (src) {
+    var sound = document.createElement("audio");
+    if ("src" in sound) {
+        sound.autoPlay = false;
+    }
+    else {
+        sound = document.createElement("bgsound");
+        sound.volume = -10000;
+        sound.play = function () {
+            this.src = src;
+            this.volume = 0;
+        }
+    }
+    sound.src = src;
+    document.body.appendChild(sound);
+    return sound;
+ }

@@ -70,7 +70,7 @@ body {
     top: -9999px;
     left: -9999px;
 
-    animation: left 1s infinite;
+    transition: all 0.5s;
 }
 
 .flipH {

@@ -6,6 +6,15 @@ body {
     padding: 1rem;
 
     background: url('stone.png');
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+:root {
+    --scale: 0.5;
 }
 
 #input {
@@ -38,8 +47,8 @@ body {
 
 .item {
     padding: 0px;
-    width: 50px;
-    height: 50px;
+    width: calc(50px * var(--scale));
+    height: calc(50px * var(--scale));
     background: url('diamond_ore.png') no-repeat center;
     background-size: cover;
 }
@@ -80,8 +89,8 @@ body {
 #player {
     background: url('mining.gif') no-repeat center;
     background-size: cover;
-    width: 75px;
-    height: 75px;
+    width: calc(75px * var(--scale));
+    height: calc(75px * var(--scale));
     position: absolute;
 
     top: -9999px;
@@ -104,3 +113,4 @@ body {
     text-align: center;
     font-size: 3rem;
 }
+

@@ -1,4 +1,5 @@
 console.log("Hello world")
+window.noSleep = new NoSleep();
 
 const start = (time) => {
     time = time;
@@ -10,9 +11,40 @@ const start = (time) => {
     }
     console.log("Started with time: ", time);
 
+    if (time > 10) {
+        if (time >= 60) {
+            setScale(0.43)
+        } else if (time >= 45) {
+            setScale(0.5)
+        } else if (time >= 30) {
+            setScale(0.55)
+        } else {
+            setScale(0.7)
+        }
+    } else {
+        setScale(1);
+    }
+
     showInput(false);
     createItems(time * 6);
     startTimer(time);
+    noSleep.enable();
+}
+
+const setScale = (scale) => {
+    window.scale = scale;
+    console.log("Setting scale to: ", scale)
+    // Set --scale to scale
+    document.documentElement.style.setProperty('--scale', scale);
+}
+
+const stop = () => {
+    clearInterval(window.timer);
+    showInput(true);
+    noSleep.disable();
+    // Delete the element
+    const container = document.getElementById("items");
+    document.body.removeChild(container);
 }
 
 const showInput = (show) => {
@@ -57,9 +89,8 @@ const updateTimer = () => {
     const seconds = window.timeLeft % 60;
     timeLeftEl.innerText = `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
     if (window.timeLeft <= 0) {
-        clearInterval(window.timer);
-        alert("Time is up!");
-        showInput(true);
+        stop();
+        return;
     }
     // Find current item. (get modulo 10 of timeLeft)
     const items = document.getElementsByClassName("item");
@@ -79,8 +110,9 @@ const updateTimer = () => {
 
     // Move player to current item
     const player = document.getElementById("player");
-    player.style.left = items[currentItemIndex].offsetLeft - 50 + "px";
-    player.style.top = items[currentItemIndex].offsetTop -10 + "px";
+    const scale = window.scale || 1;
+    player.style.left = items[currentItemIndex].offsetLeft - (50 * scale) + "px";
+    player.style.top = items[currentItemIndex].offsetTop - (10 * scale) + "px";
 }
 
 const startTimer = (time) => {
@@ -88,5 +120,6 @@ const startTimer = (time) => {
         clearInterval(window.timer);
     }
     window.timeLeft = time * 60;
+    updateTimer();
     window.timer = setInterval(updateTimer, 1000);
 }
